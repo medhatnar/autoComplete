@@ -1,6 +1,3 @@
-Autocomplete Problem
-====================
-
 Instructions:
 
 Create a program that can autocomplete word fragments using one or more text files as the data source. We recommend spending two-to-three hours meeting the basic requirements and no more than two-to-three hours completing the extra credit if you so choose. You can complete this challenge in any programming language, but our stack is written in Ruby and JavaScript.

@@ -1,51 +1,64 @@
 const fs = require('fs');
-const readline = require('readline');
 const stream = require('stream');
+const readline = require('readline');
+const { once } = require('events');
 
-const instream = fs.createReadStream(`${process.argv[3]}`);
-const outstream = new stream();
-const rl = readline.createInterface(instream, outstream);
+const { Trie } = require('./trie.js');
 const wordFragment = `${process.argv[2]}`;
 
-let topWords = new Map();
-let mostFrequentWords = [];
+function autoCompleteProgram(wordFragment) {
+ // using a Trie data structure.
+  let dataSource = new Trie();
+  let autoSuggestions = [];
+  let fileToRead;
+// iterate through all files passed in as arguments
+// we start at index three since the second argument is the word fragment.
+// A read stream is created for each file.
+  for (let i = 3; i < process.argv.length; i++) {
+    fileToRead = `${process.argv[i]}`;
+    let instream = fs.createReadStream(`${fileToRead}`);
+    let rl = readline.createInterface({
+      input: instream,
+      output: stream,
+      crlfDelay: Infinity,
+    });
 
-rl.on('line', function(line) {
-  const filteredLine = line.replace(/\W/g, ' ');
-  filteredLine.split(' ').forEach(word => wordMap(word));
-  // get word fragment
-  // find fragments in doc
-  // process subsets of document with stream? (DS)
-  // return top 25 that match fragment
-});
-
-rl.on('close', function() {
-  console.log(mostFrequent(topWords));
-  return topWords;
-});
-
-function wordMap(word) {
-  if (topWords[word] && word.match(wordFragment)) {
-    topWords[word] = topWords[word] + 1;
-  } else if (word.match(wordFragment)) {
-    topWords[word] = 1;
+    autoSuggestions.push(trieParseFiles(rl));
   }
+
+  async function trieParseFiles(rl) {
+    // Each line has its non letter characters removed and is stored 
+    // in the Trie data structure we initiated above.
+    try {
+      rl.on('line', line => {
+        let alphaCharLine = line.replace(/[^A-Za-z]/g, ' ').split(' ');
+        for (let i = 0; i < alphaCharLine.length; i++) {
+          dataSource.insert(alphaCharLine[i]);
+        }
+      });
+      await once(rl, 'close');
+      // once the file is fully processed into the Trie
+      // we search for the words that would be suggested
+      // for the fragment passed in.
+      // Ideally I would have liked to process the files beforehand
+      // so all we would need to do is search at runtime.
+      return dataSource.search(wordFragment);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  // after all suggestions are found and accounted for
+  // we combine all results, sort them, and return the top 25 below.
+  Promise.all(autoSuggestions).then(suggestions => {
+    var sortedSuggestions = [].concat
+      .apply([], suggestions)
+      .sort((a, b) => b.count - a.count);
+      if(sortedSuggestions.length < 25) {
+        console.log(sortedSuggestions);
+    } else {
+        console.log(sortedSuggestions.slice(0, -(sortedSuggestions.length-25)));
+    }
+  });
 }
 
-function mostFrequent(wordsMap) {
-  mostFrequentWords = Object.keys(wordsMap).map(function(key) {
-    return {
-      name: key,
-      total: wordsMap[key],
-    };
-  });
-
-  const sorted = mostFrequentWords.sort(function(a, b) {
-    return b.total - a.total;
-  });
-  if (sorted.length < 25) {
-    return sorted;
-  } else {
-    return sorted.slice(0, -(sorted.length - 25));
-  }
-}
+autoCompleteProgram(wordFragment);

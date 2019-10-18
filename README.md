@@ -9,8 +9,7 @@ e.g.,`node autoCompleter.js demo ../testFiles/about-act-blue.txt ../testFiles/sh
 
 
 ## Known bugs/issues
-* I understand this is not the most performant option with the given data structure but improvements could have at least been made
-* if I was able to figure out how to add to a single existing Trie instead of creating a Trie per file and then searching through each of those Tries. If I was able to achieve a single Trie with all file text inserted into it, then we could have avoided the duplicates check and just done one search on a single Trie and avoided concatenating and sorting results as well. 
+* I understand this is not the most performant option with the given data structure but improvements could have at least been made if I was able to figure out how to add to a single existing Trie instead of creating a Trie per file and then searching through each of those Tries. If I was able to achieve a single Trie with all file text inserted into it, then we could have avoided the duplicates check and just done one search on a single Trie and avoided concatenating and sorting results as well. 
 * The time complexity for finding the node corresponding to a word fragment of length n is O(n) which isn't terrible. The expensive part is finding all the correlated letter nodes. This can be O(n ^ 2). 
 * Although time complexity could use improvements, we at least save a ton on space compared to the naive approach because we do not need to store every individual word found, but can instead store individual letters which multiple words can share. 
 

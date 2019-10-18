@@ -15,7 +15,7 @@ e.g.,`node autoCompleter.js demo ../testFiles/about-act-blue.txt ../testFiles/sh
 
 ## If I had more time:
 *  I would have implemented a Finite State Transducers (FSTs). Albeit, I did not realize until after the fact that an FST Trie would have been
-the most ideal solution. We waste a lot of time updating word frequency, but an FST inherently allows us to associate a numeric value with a word on as the search method is run. It is ideal for autocompletes such as this prompt that require a score/weight for each word.
+the most ideal solution. We waste a lot of time updating word frequency, but an FST inherently allows us to associate a numeric value with a word as the search method is run. It is ideal for autocompletes such as this prompt that require a score/weight for each word.
 * An FST does not simply set nodes for each letter but would organize letters into their own "weight" categories.
 > e.g., root -> b -> a -> r
                        -> z

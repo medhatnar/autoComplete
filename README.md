@@ -4,8 +4,7 @@
 * To run you will need to pass in a word fragment as first argument and then subsequent arguments should be file paths.
 e.g.,`node autoCompleter.js demo ../testFiles/about-act-blue.txt ../testFiles/shakespeare-complete.txt`
 
-* To run all tests run `npm test tests`
-* To run an individual file's test run `npm test [fileName.js]`
+* To run all tests run `npm test`
 
 
 ## Known bugs/issues

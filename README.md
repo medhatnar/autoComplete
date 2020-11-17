@@ -1,6 +1,6 @@
 ## How to run program and tests:
 
-* The entire program is executable from file `autoCompelter.js`.
+* The entire program is executable from file `autoCompleter.js`.
 * To run you will need to pass in a word fragment as first argument and then subsequent arguments should be file paths.
 e.g.,`node autoCompleter.js demo ../testFiles/about-act-blue.txt ../testFiles/shakespeare-complete.txt`
 
